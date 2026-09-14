@@ -1,0 +1,40 @@
+{
+  "name": "متجر الخدمات الرقمية الشامل | Digital Hub",
+  "short_name": "الخدمات الرقمية",
+  "description": "منصة شاملة لشحن الألعاب، الاشتراكات، البطاقات الرقمية وأرقام التفعيل",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["shopping", "games", "utilities"],
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "شحن الألعاب",
+      "url": "/#games",
+      "description": "شحن فوري لشدات ببجي وجواهر فري فاير"
+    },
+    {
+      "name": "تتبع طلبي",
+      "url": "/#track",
+      "description": "تتبع حالة طلبك برقم الطلب"
+    }
+  ]
+}

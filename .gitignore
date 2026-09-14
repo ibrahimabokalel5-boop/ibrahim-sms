@@ -1,0 +1,24 @@
+# قاعدة البيانات المحلية (لحماية سرية بياناتك)
+*.db
+store.db
+
+# ملفات البيئة والسرية
+.env
+.env.local
+
+# بايثون ومخلفات التشغيل
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# النظام ومحررات الأكواد
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.gemini/
