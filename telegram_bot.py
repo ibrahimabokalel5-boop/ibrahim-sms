@@ -474,6 +474,51 @@ def build_main_menu_keyboard(chat_id):
 def build_back_keyboard(target="menu_main"):
     return {"inline_keyboard": [[{"text": "🔙 العودة للقائمة الرئيسية", "callback_data": target}]]}
 
+def build_sms_countries_keyboard(code, page=0):
+    prices = hero_get_prices(code)
+    per_page = 8
+    total_countries = len(SMS_COUNTRIES_DATA)
+    total_pages = max(1, (total_countries + per_page - 1) // per_page)
+    page = max(0, min(page, total_pages - 1))
+    
+    start_idx = page * per_page
+    end_idx = min(start_idx + per_page, total_countries)
+    page_countries = SMS_COUNTRIES_DATA[start_idx:end_idx]
+    
+    kb = [
+        [
+            {"text": "⚡ الأوفر والأرخص فوراً", "callback_data": f"sms_cheapest_{code}"},
+            {"text": "🔍 بحث عن دولة بالاسم", "callback_data": f"sms_search_{code}"}
+        ]
+    ]
+    
+    for i in range(0, len(page_countries), 2):
+        row = []
+        c1 = page_countries[i]
+        c1_live = prices.get(c1['id'], {}).get(code, {}).get('cost')
+        cost1 = float(c1_live) if c1_live else c1['cost']
+        usd1, local1 = calculate_prices(cost1)
+        row.append({"text": f"{c1['name']} ⇦ {usd1}$", "callback_data": f"sms_prep_{code}_{c1['id']}"})
+        
+        if i + 1 < len(page_countries):
+            c2 = page_countries[i+1]
+            c2_live = prices.get(c2['id'], {}).get(code, {}).get('cost')
+            cost2 = float(c2_live) if c2_live else c2['cost']
+            usd2, local2 = calculate_prices(cost2)
+            row.append({"text": f"{c2['name']} ⇦ {usd2}$", "callback_data": f"sms_prep_{code}_{c2['id']}"})
+        kb.append(row)
+        
+    nav_row = []
+    if page > 0:
+        nav_row.append({"text": "⬅️ السابق", "callback_data": f"smspage_{code}_{page-1}"})
+    nav_row.append({"text": f"📄 {page+1} / {total_pages}", "callback_data": "sms_noop"})
+    if page < total_pages - 1:
+        nav_row.append({"text": "التالي ➡️", "callback_data": f"smspage_{code}_{page+1}"})
+    kb.append(nav_row)
+    
+    kb.append([{"text": "🔙 العودة لاختيار التطبيق", "callback_data": "menu_sms"}])
+    return kb, total_pages
+
 # =========================================================================
 #   معالجة أحداث الأزرار (Callback Queries)
 # =========================================================================
@@ -723,51 +768,6 @@ def handle_callback_query(cq):
         answer_cq(cq_id)
         edit_msg(chat_id, message_id, text, {"inline_keyboard": kb})
         return
-
-def build_sms_countries_keyboard(code, page=0):
-    prices = hero_get_prices(code)
-    per_page = 8
-    total_countries = len(SMS_COUNTRIES_DATA)
-    total_pages = max(1, (total_countries + per_page - 1) // per_page)
-    page = max(0, min(page, total_pages - 1))
-    
-    start_idx = page * per_page
-    end_idx = min(start_idx + per_page, total_countries)
-    page_countries = SMS_COUNTRIES_DATA[start_idx:end_idx]
-    
-    kb = [
-        [
-            {"text": "⚡ الأوفر والأرخص فوراً", "callback_data": f"sms_cheapest_{code}"},
-            {"text": "🔍 بحث عن دولة بالاسم", "callback_data": f"sms_search_{code}"}
-        ]
-    ]
-    
-    for i in range(0, len(page_countries), 2):
-        row = []
-        c1 = page_countries[i]
-        c1_live = prices.get(c1['id'], {}).get(code, {}).get('cost')
-        cost1 = float(c1_live) if c1_live else c1['cost']
-        usd1, local1 = calculate_prices(cost1)
-        row.append({"text": f"{c1['name']} ⇦ {usd1}$", "callback_data": f"sms_prep_{code}_{c1['id']}"})
-        
-        if i + 1 < len(page_countries):
-            c2 = page_countries[i+1]
-            c2_live = prices.get(c2['id'], {}).get(code, {}).get('cost')
-            cost2 = float(c2_live) if c2_live else c2['cost']
-            usd2, local2 = calculate_prices(cost2)
-            row.append({"text": f"{c2['name']} ⇦ {usd2}$", "callback_data": f"sms_prep_{code}_{c2['id']}"})
-        kb.append(row)
-        
-    nav_row = []
-    if page > 0:
-        nav_row.append({"text": "⬅️ السابق", "callback_data": f"smspage_{code}_{page-1}"})
-    nav_row.append({"text": f"📄 {page+1} / {total_pages}", "callback_data": "sms_noop"})
-    if page < total_pages - 1:
-        nav_row.append({"text": "التالي ➡️", "callback_data": f"smspage_{code}_{page+1}"})
-    kb.append(nav_row)
-    
-    kb.append([{"text": "🔙 العودة لاختيار التطبيق", "callback_data": "menu_sms"}])
-    return kb, total_pages
 
     if data.startswith("sms_srv_"):
         code = data.replace("sms_srv_", "")
