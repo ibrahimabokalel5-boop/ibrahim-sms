@@ -896,6 +896,7 @@ def handle_callback_query(cq):
                 {"text": "📈 تعديل نسبة الربح %", "callback_data": "admin_set_margin"}
             ],
             [
+                {"text": "💳 أرقام وحسابات الدفع", "callback_data": "admin_payment_settings"},
                 {"text": "📢 إرسال إذاعة لجميع الزبائن", "callback_data": "admin_broadcast"}
             ],
             [
@@ -981,6 +982,82 @@ def handle_callback_query(cq):
         answer_cq(cq_id)
         edit_msg(chat_id, message_id, f"📢 *إرسال إذاعة عامة لجميع زبائن البوت ({count} مشترك):*\n\nاكتب الآن نص الرسالة أو العرض الذي ترغب بإرساله للجميع:", {"inline_keyboard": [
             [{"text": "إلغاء", "callback_data": "menu_admin"}]
+        ]})
+        return
+
+    if data == "admin_payment_settings":
+        if not is_admin:
+            return
+        settings = database.get_all_settings()
+        s_cash = settings.get("syriatel_cash_number", "غير محدد")
+        sh_cash = settings.get("sham_cash_number", "غير محدد")
+        usdt_w = settings.get("usdt_wallet_address", "غير محدد")
+        phone = settings.get("shop_phone", "غير محدد")
+
+        text = (
+            "⚙️ *إدارة أرقام وحسابات الدفع للمحل:*\n"
+            "━━━━━━━━━━━━━━━━━━\n"
+            f"📱 *سيريتل كاش:* `{s_cash}`\n"
+            f"📱 *شام كاش:* `{sh_cash}`\n"
+            f"💎 *محفظة USDT:* `{usdt_w}`\n"
+            f"📞 *هاتف الدعم:* `{phone}`\n"
+            "━━━━━━━━━━━━━━━━━━\n"
+            "اختر الحساب الذي ترغب بتعديل رقمه:"
+        )
+        kb = [
+            [
+                {"text": "✏️ تعديل سيريتل كاش", "callback_data": "admin_edit_syriatel"},
+                {"text": "✏️ تعديل شام كاش", "callback_data": "admin_edit_sham"}
+            ],
+            [
+                {"text": "✏️ تعديل محفظة USDT", "callback_data": "admin_edit_usdt"},
+                {"text": "✏️ تعديل هاتف الدعم", "callback_data": "admin_edit_phone"}
+            ],
+            [
+                {"text": "🔙 العودة للوحة الإدارة", "callback_data": "menu_admin"}
+            ]
+        ]
+        answer_cq(cq_id)
+        edit_msg(chat_id, message_id, text, {"inline_keyboard": kb})
+        return
+
+    if data == "admin_edit_syriatel":
+        if not is_admin:
+            return
+        database.set_user_session(chat_id, "admin_waiting_syriatel", {})
+        answer_cq(cq_id)
+        edit_msg(chat_id, message_id, "📱 *أرسل رقم سيريتل كاش الجديد للمحل (مثال: 0991234567):*", {"inline_keyboard": [
+            [{"text": "إلغاء", "callback_data": "admin_payment_settings"}]
+        ]})
+        return
+
+    if data == "admin_edit_sham":
+        if not is_admin:
+            return
+        database.set_user_session(chat_id, "admin_waiting_sham", {})
+        answer_cq(cq_id)
+        edit_msg(chat_id, message_id, "📱 *أرسل رقم شام كاش الجديد للمحل (مثال: 0981234567):*", {"inline_keyboard": [
+            [{"text": "إلغاء", "callback_data": "admin_payment_settings"}]
+        ]})
+        return
+
+    if data == "admin_edit_usdt":
+        if not is_admin:
+            return
+        database.set_user_session(chat_id, "admin_waiting_usdt", {})
+        answer_cq(cq_id)
+        edit_msg(chat_id, message_id, "💎 *أرسل عنوان محفظة USDT (شبكة TRC-20) الجديد:*", {"inline_keyboard": [
+            [{"text": "إلغاء", "callback_data": "admin_payment_settings"}]
+        ]})
+        return
+
+    if data == "admin_edit_phone":
+        if not is_admin:
+            return
+        database.set_user_session(chat_id, "admin_waiting_phone", {})
+        answer_cq(cq_id)
+        edit_msg(chat_id, message_id, "📞 *أرسل رقم هاتف أو واتساب الدعم الفني الجديد للمتجر:*", {"inline_keyboard": [
+            [{"text": "إلغاء", "callback_data": "admin_payment_settings"}]
         ]})
         return
 
@@ -1239,6 +1316,30 @@ def handle_message(msg):
                 send_msg(chat_id, f"✅ تم تحديث نسبة الربح بنجاح إلى: *{new_margin} %*", build_main_menu_keyboard(chat_id))
             except Exception:
                 send_msg(chat_id, "⚠️ يرجى إرسال نسبة صحيحة (مثال: 20)")
+            return
+
+        if state == "admin_waiting_syriatel":
+            database.set_setting("syriatel_cash_number", text.strip())
+            database.clear_user_session(chat_id)
+            send_msg(chat_id, f"✅ تم تحديث رقم سيريتل كاش بنجاح إلى:\n`{text.strip()}`", build_main_menu_keyboard(chat_id))
+            return
+
+        if state == "admin_waiting_sham":
+            database.set_setting("sham_cash_number", text.strip())
+            database.clear_user_session(chat_id)
+            send_msg(chat_id, f"✅ تم تحديث رقم شام كاش بنجاح إلى:\n`{text.strip()}`", build_main_menu_keyboard(chat_id))
+            return
+
+        if state == "admin_waiting_usdt":
+            database.set_setting("usdt_wallet_address", text.strip())
+            database.clear_user_session(chat_id)
+            send_msg(chat_id, f"✅ تم تحديث عنوان محفظة USDT بنجاح إلى:\n`{text.strip()}`", build_main_menu_keyboard(chat_id))
+            return
+
+        if state == "admin_waiting_phone":
+            database.set_setting("shop_phone", text.strip())
+            database.clear_user_session(chat_id)
+            send_msg(chat_id, f"✅ تم تحديث رقم هاتف الدعم الفني بنجاح إلى:\n`{text.strip()}`", build_main_menu_keyboard(chat_id))
             return
 
         if state == "admin_waiting_broadcast":

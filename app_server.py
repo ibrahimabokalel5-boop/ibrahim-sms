@@ -44,21 +44,16 @@ def add_cors_headers(response):
     return response
 
 # ==========================================
-# الملفات الثابتة و PWA
+# حالة السيرفر الخلفي لبوت التيليجرام
 # ==========================================
 @app.route('/')
 def index():
-    return send_file('index.html')
-
-@app.route('/manifest.json')
-def manifest():
-    return send_file('manifest.json', mimetype='application/manifest+json')
-
-@app.route('/sw.js')
-def service_worker():
-    resp = send_file('sw.js', mimetype='application/javascript')
-    resp.headers['Service-Worker-Allowed'] = '/'
-    return resp
+    return jsonify({
+        "status": "online",
+        "service": "Telegram Store Bot Backend",
+        "author": "Ibrahim Store",
+        "telegram_bot_active": bool(telegram_bot.get_bot_token())
+    })
 
 # ==========================================
 # مسارات فحص السيرفر والصحة (Health Check)
