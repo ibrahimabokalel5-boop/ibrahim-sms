@@ -238,14 +238,45 @@ SMS_SERVICES_DATA = {
 }
 
 SMS_COUNTRIES_DATA = [
-    {'id': '0', 'name': '🇷🇺 روسيا', 'cost': 0.35},
-    {'id': '1', 'name': '🇺🇦 أوكرانيا', 'cost': 0.40},
-    {'id': '2', 'name': '🇰🇿 كازاخستان', 'cost': 0.35},
-    {'id': '6', 'name': '🇮🇩 إندونيسيا', 'cost': 0.45},
-    {'id': '16', 'name': '🇬🇧 بريطانيا', 'cost': 0.70},
-    {'id': '73', 'name': '🇧🇷 البرازيل', 'cost': 0.50},
-    {'id': '187', 'name': '🇺🇸 أمريكا', 'cost': 0.85},
-    {'id': '62', 'name': '🇹🇷 تركيا', 'cost': 0.80}
+    {'id': '4', 'name': '🇵🇭 الفلبين', 'cost': 0.05, 'aliases': ['فلبين', 'philippines']},
+    {'id': '6', 'name': '🇮🇩 إندونيسيا', 'cost': 0.08, 'aliases': ['اندونيسيا', 'indonesia']},
+    {'id': '0', 'name': '🇷🇺 روسيا', 'cost': 0.35, 'aliases': ['روسيا', 'russia']},
+    {'id': '1', 'name': '🇺🇦 أوكرانيا', 'cost': 0.40, 'aliases': ['اوكرانيا', 'ukraine']},
+    {'id': '2', 'name': '🇰🇿 كازاخستان', 'cost': 0.35, 'aliases': ['كازاخستان', 'kazakhstan']},
+    {'id': '37', 'name': '🇲🇦 المغرب', 'cost': 0.15, 'aliases': ['المغرب', 'morocco']},
+    {'id': '21', 'name': '🇪🇬 مصر', 'cost': 0.20, 'aliases': ['مصر', 'egypt']},
+    {'id': '62', 'name': '🇹🇷 تركيا', 'cost': 0.80, 'aliases': ['تركيا', 'turkey']},
+    {'id': '16', 'name': '🇬🇧 بريطانيا', 'cost': 0.70, 'aliases': ['بريطانيا', 'انكلترا', 'uk', 'britain']},
+    {'id': '187', 'name': '🇺🇸 أمريكا', 'cost': 0.85, 'aliases': ['امريكا', 'الولايات المتحدة', 'usa']},
+    {'id': '73', 'name': '🇧🇷 البرازيل', 'cost': 0.45, 'aliases': ['البرازيل', 'brazil']},
+    {'id': '22', 'name': '🇮🇳 الهند', 'cost': 0.12, 'aliases': ['الهند', 'india']},
+    {'id': '10', 'name': '🇻🇳 فيتنام', 'cost': 0.15, 'aliases': ['فيتنام', 'vietnam']},
+    {'id': '19', 'name': '🇳🇬 نيجيريا', 'cost': 0.10, 'aliases': ['نيجيريا', 'nigeria']},
+    {'id': '58', 'name': '🇩🇿 الجزائر', 'cost': 0.30, 'aliases': ['الجزائر', 'algeria']},
+    {'id': '47', 'name': '🇮🇶 العراق', 'cost': 0.45, 'aliases': ['العراق', 'iraq']},
+    {'id': '116', 'name': '🇯🇴 الأردن', 'cost': 0.45, 'aliases': ['الاردن', 'jordan']},
+    {'id': '30', 'name': '🇾🇪 اليمن', 'cost': 0.50, 'aliases': ['اليمن', 'yemen']},
+    {'id': '53', 'name': '🇸🇦 السعودية', 'cost': 0.90, 'aliases': ['السعودية', 'saudi']},
+    {'id': '95', 'name': '🇦🇪 الإمارات', 'cost': 0.90, 'aliases': ['الامارات', 'uae']},
+    {'id': '43', 'name': '🇩🇪 ألمانيا', 'cost': 0.85, 'aliases': ['المانيا', 'germany']},
+    {'id': '78', 'name': '🇫🇷 فرنسا', 'cost': 0.85, 'aliases': ['فرنسا', 'france']},
+    {'id': '48', 'name': '🇳🇱 هولندا', 'cost': 0.80, 'aliases': ['هولندا', 'netherlands']},
+    {'id': '36', 'name': '🇨🇦 كندا', 'cost': 0.85, 'aliases': ['كندا', 'canada']},
+    {'id': '15', 'name': '🇵🇱 بولندا', 'cost': 0.50, 'aliases': ['بولندا', 'poland']},
+    {'id': '86', 'name': '🇮🇹 إيطاليا', 'cost': 0.85, 'aliases': ['ايطاليا', 'italy']},
+    {'id': '56', 'name': '🇪🇸 إسبانيا', 'cost': 0.80, 'aliases': ['اسبانيا', 'spain']},
+    {'id': '32', 'name': '🇷🇴 رومانيا', 'cost': 0.40, 'aliases': ['رومانيا', 'romania']},
+    {'id': '33', 'name': '🇨🇴 كولومبيا', 'cost': 0.35, 'aliases': ['كولومبيا', 'colombia']},
+    {'id': '31', 'name': '🇿🇦 جنوب أفريقيا', 'cost': 0.30, 'aliases': ['جنوب افريقيا', 'south africa']},
+    {'id': '114', 'name': '🇱🇰 سريلانكا', 'cost': 0.25, 'aliases': ['سريلانكا', 'sri lanka']},
+    {'id': '40', 'name': '🇺🇿 أوزبكستان', 'cost': 0.35, 'aliases': ['اوزبكستان', 'uzbekistan']},
+    {'id': '11', 'name': '🇰🇬 قيرغيزستان', 'cost': 0.35, 'aliases': ['قيرغيزستان', 'kyrgyzstan']},
+    {'id': '7', 'name': '🇲🇾 ماليزيا', 'cost': 0.30, 'aliases': ['ماليزيا', 'malaysia']},
+    {'id': '8', 'name': '🇰🇪 كينيا', 'cost': 0.20, 'aliases': ['كينيا', 'kenya']},
+    {'id': '35', 'name': '🇦🇿 أذربيجان', 'cost': 0.35, 'aliases': ['اذربيجان', 'azerbaijan']},
+    {'id': '34', 'name': '🇪🇪 إستونيا', 'cost': 0.60, 'aliases': ['استونيا', 'estonia']},
+    {'id': '3', 'name': '🇨🇳 الصين', 'cost': 0.45, 'aliases': ['الصين', 'china']},
+    {'id': '14', 'name': '🇭🇰 هونغ كونغ', 'cost': 0.50, 'aliases': ['هونغ كونغ', 'hong kong']}
 ]
 
 # =========================================================================
@@ -385,6 +416,30 @@ def hero_check_code(act_id):
 def hero_cancel_number(act_id):
     res = hero_api_call({"action": "setStatus", "id": act_id, "status": "8"})
     return res
+
+_prices_cache = {}
+_prices_cache_time = {}
+
+def hero_get_prices(service):
+    """جلب الأسعار والأعداد الحية لجميع الدول من Hero-SMS مع كاش دقيقة واحدة"""
+    global _prices_cache, _prices_cache_time
+    now = time.time()
+    if service in _prices_cache and (now - _prices_cache_time.get(service, 0) < 60):
+        return _prices_cache[service]
+    
+    api_key = get_hero_key()
+    proxies = get_requests_proxies()
+    try:
+        url = f"{HERO_SMS_URL}?api_key={api_key}&action=getPrices&service={service}"
+        resp = requests.get(url, timeout=12, proxies=proxies)
+        if resp.status_code == 200:
+            data = resp.json()
+            _prices_cache[service] = data
+            _prices_cache_time[service] = now
+            return data
+    except Exception as e:
+        logger.warning(f"Failed to fetch live prices for {service}: {e}")
+    return _prices_cache.get(service, {})
 
 # =========================================================================
 #   واجهات القوائم والأزرار (Keyboards)
@@ -669,6 +724,51 @@ def handle_callback_query(cq):
         edit_msg(chat_id, message_id, text, {"inline_keyboard": kb})
         return
 
+def build_sms_countries_keyboard(code, page=0):
+    prices = hero_get_prices(code)
+    per_page = 8
+    total_countries = len(SMS_COUNTRIES_DATA)
+    total_pages = max(1, (total_countries + per_page - 1) // per_page)
+    page = max(0, min(page, total_pages - 1))
+    
+    start_idx = page * per_page
+    end_idx = min(start_idx + per_page, total_countries)
+    page_countries = SMS_COUNTRIES_DATA[start_idx:end_idx]
+    
+    kb = [
+        [
+            {"text": "⚡ الأوفر والأرخص فوراً", "callback_data": f"sms_cheapest_{code}"},
+            {"text": "🔍 بحث عن دولة بالاسم", "callback_data": f"sms_search_{code}"}
+        ]
+    ]
+    
+    for i in range(0, len(page_countries), 2):
+        row = []
+        c1 = page_countries[i]
+        c1_live = prices.get(c1['id'], {}).get(code, {}).get('cost')
+        cost1 = float(c1_live) if c1_live else c1['cost']
+        usd1, local1 = calculate_prices(cost1)
+        row.append({"text": f"{c1['name']} ⇦ {usd1}$", "callback_data": f"sms_prep_{code}_{c1['id']}"})
+        
+        if i + 1 < len(page_countries):
+            c2 = page_countries[i+1]
+            c2_live = prices.get(c2['id'], {}).get(code, {}).get('cost')
+            cost2 = float(c2_live) if c2_live else c2['cost']
+            usd2, local2 = calculate_prices(cost2)
+            row.append({"text": f"{c2['name']} ⇦ {usd2}$", "callback_data": f"sms_prep_{code}_{c2['id']}"})
+        kb.append(row)
+        
+    nav_row = []
+    if page > 0:
+        nav_row.append({"text": "⬅️ السابق", "callback_data": f"smspage_{code}_{page-1}"})
+    nav_row.append({"text": f"📄 {page+1} / {total_pages}", "callback_data": "sms_noop"})
+    if page < total_pages - 1:
+        nav_row.append({"text": "التالي ➡️", "callback_data": f"smspage_{code}_{page+1}"})
+    kb.append(nav_row)
+    
+    kb.append([{"text": "🔙 العودة لاختيار التطبيق", "callback_data": "menu_sms"}])
+    return kb, total_pages
+
     if data.startswith("sms_srv_"):
         code = data.replace("sms_srv_", "")
         srv = SMS_SERVICES_DATA.get(code)
@@ -676,16 +776,80 @@ def handle_callback_query(cq):
             answer_cq(cq_id, "خدمة غير متوفرة")
             return
         
-        kb = []
-        for c in SMS_COUNTRIES_DATA:
-            usd, local = calculate_prices(c['cost'])
-            btn_text = f"{c['name']} ⇦ {usd}$ ({local:,.0f} ل.س)"
-            kb.append([{"text": btn_text, "callback_data": f"sms_prep_{code}_{c['id']}"}])
-        kb.append([{"text": "🔙 العودة لاختيار التطبيق", "callback_data": "menu_sms"}])
-        
-        text = f"{srv['icon']} *تفعيل {srv['name']}*\n\nاختر الدولة المطلوبة للرقم:"
+        kb, total_pages = build_sms_countries_keyboard(code, 0)
+        text = f"{srv['icon']} *تفعيل {srv['name']}*\n\nاختر الدولة المطلوبة للرقم (صفحة 1 من {total_pages}) أو استخدم البحث الذكي:"
         answer_cq(cq_id)
         edit_msg(chat_id, message_id, text, {"inline_keyboard": kb})
+        return
+
+    if data.startswith("smspage_"):
+        parts = data.split("_")
+        code = parts[1]
+        page = int(parts[2])
+        srv = SMS_SERVICES_DATA.get(code)
+        kb, total_pages = build_sms_countries_keyboard(code, page)
+        text = f"{srv['icon']} *تفعيل {srv['name']}*\n\nاختر الدولة المطلوبة للرقم (صفحة {page+1} من {total_pages}) أو استخدم البحث الذكي:"
+        answer_cq(cq_id)
+        edit_msg(chat_id, message_id, text, {"inline_keyboard": kb})
+        return
+
+    if data == "sms_noop":
+        answer_cq(cq_id)
+        return
+
+    if data.startswith("sms_cheapest_"):
+        code = data.replace("sms_cheapest_", "")
+        srv = SMS_SERVICES_DATA.get(code)
+        prices = hero_get_prices(code)
+        
+        best_c = None
+        min_cost = 9999.0
+        for c in SMS_COUNTRIES_DATA:
+            cid = c['id']
+            p_info = prices.get(cid, {}).get(code, {})
+            c_cost = float(p_info.get('cost', c['cost']))
+            c_count = int(p_info.get('count', 100))
+            if c_count > 10 and c_cost < min_cost:
+                min_cost = c_cost
+                best_c = c
+        if not best_c:
+            best_c = SMS_COUNTRIES_DATA[0]
+            min_cost = best_c['cost']
+            
+        usd, local = calculate_prices(min_cost)
+        answer_cq(cq_id, f"⚡ تم اختيار الأوفر: {best_c['name']} بسعر {usd}$", show_alert=True)
+        database.set_user_session(chat_id, "waiting_payment_ref", {
+            "service_type": "sms",
+            "service_title": f"رقم {srv['name']} ({best_c['name']})",
+            "package_id": f"{code}_{best_c['id']}",
+            "package_name": f"رقم {best_c['name']} (الأرخص ⚡)",
+            "target_id": f"كود تفعيل {srv['name']}",
+            "price_usd": usd,
+            "price_local": local,
+            "sms_srv": code,
+            "sms_country": best_c['id']
+        })
+        show_payment_methods(chat_id, message_id, {
+            "service_title": f"رقم تفعيل {srv['name']}",
+            "package_name": f"{best_c['name']} (الأوفر ⚡)",
+            "target_id": "طلب رقم جديد",
+            "price_usd": usd,
+            "price_local": local
+        })
+        return
+
+    if data.startswith("sms_search_"):
+        code = data.replace("sms_search_", "")
+        srv = SMS_SERVICES_DATA.get(code)
+        database.set_user_session(chat_id, "waiting_country_search", {"sms_srv": code})
+        answer_cq(cq_id)
+        prompt_text = (
+            f"🔍 *البحث عن دولة لتفعيل {srv['name']}:*\n\n"
+            f"أرسل اسم الدولة التي تبحث عنها (مثال: `مصر`، `المغرب`، `المانيا`، `كندا`، `تركيا`...):"
+        )
+        edit_msg(chat_id, message_id, prompt_text, {"inline_keyboard": [
+            [{"text": "🔙 إلغاء والعودة", "callback_data": f"sms_srv_{code}"}]
+        ]})
         return
 
     if data.startswith("sms_prep_"):
@@ -698,7 +862,11 @@ def handle_callback_query(cq):
             answer_cq(cq_id, "خطأ في اختيار الرقم")
             return
         
-        usd, local = calculate_prices(country['cost'])
+        prices = hero_get_prices(srv_code)
+        c_live = prices.get(c_id, {}).get(srv_code, {}).get('cost')
+        base_cost = float(c_live) if c_live else country['cost']
+        usd, local = calculate_prices(base_cost)
+        
         database.set_user_session(chat_id, "waiting_payment_ref", {
             "service_type": "sms",
             "service_title": f"رقم {srv['name']} ({country['name']})",
@@ -712,7 +880,6 @@ def handle_callback_query(cq):
         })
         
         answer_cq(cq_id)
-        # عرض شاشة اختيار طريقة الدفع لإتمام طلب الرقم
         show_payment_methods(chat_id, message_id, {
             "service_title": f"رقم تفعيل {srv['name']}",
             "package_name": country['name'],
@@ -1288,6 +1455,38 @@ def handle_message(msg):
             f"سيصلك إشعار فوري هنا على التيليجرام بمجرد اكتمال الشحن وتفعيل طلبك! ✓"
         )
         send_msg(chat_id, client_receipt, build_main_menu_keyboard(chat_id))
+        return
+
+    # حالة البحث عن دولة لأرقام SMS
+    if state == "waiting_country_search":
+        srv_code = sdata.get("sms_srv", "wa")
+        srv = SMS_SERVICES_DATA.get(srv_code)
+        q = text.strip().lower()
+        
+        matches = []
+        for c in SMS_COUNTRIES_DATA:
+            aliases = c.get('aliases', [])
+            c_name = c['name'].lower()
+            if q in c_name or any(q in a.lower() for a in aliases):
+                matches.append(c)
+                
+        if not matches:
+            send_msg(chat_id, f"❌ لم نجد دولة باسم `{text}` في القائمة المتاحة حالياً.\nيرجى تجربة اسم آخر أو اختيار الدولة مباشرة من القائمة:", {"inline_keyboard": [
+                [{"text": "🔙 تصفح قائمة الدول", "callback_data": f"sms_srv_{srv_code}"}]
+            ]})
+            return
+            
+        prices = hero_get_prices(srv_code)
+        kb = []
+        for c in matches[:8]:
+            c_live = prices.get(c['id'], {}).get(srv_code, {}).get('cost')
+            cost = float(c_live) if c_live else c['cost']
+            usd, local = calculate_prices(cost)
+            kb.append([{"text": f"{c['name']} ⇦ {usd}$ ({local:,.0f} ل.س)", "callback_data": f"sms_prep_{srv_code}_{c['id']}"}])
+            
+        kb.append([{"text": "🔙 العودة لقائمة الدول", "callback_data": f"sms_srv_{srv_code}"}])
+        database.clear_user_session(chat_id)
+        send_msg(chat_id, f"🎯 *نتائج البحث عن ({text}) لتفعيل {srv['name']}:*", {"inline_keyboard": kb})
         return
 
     # حالة البحث عن رقم طلب
