@@ -30,6 +30,7 @@ def init_db():
         target_id TEXT NOT NULL,
         customer_name TEXT,
         customer_phone TEXT,
+        telegram_chat_id INTEGER,
         price_usd REAL NOT NULL,
         price_local REAL NOT NULL,
         currency TEXT DEFAULT 'ل.س',
@@ -38,6 +39,34 @@ def init_db():
         status TEXT DEFAULT 'pending',
         admin_notes TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+
+    # ترقية الجدول لإضافة telegram_chat_id إن لم يكن موجوداً
+    try:
+        cursor.execute("ALTER TABLE orders ADD COLUMN telegram_chat_id INTEGER")
+    except Exception:
+        pass
+
+    # جدول مستخدمي بوت التيليجرام (Bot Users)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS bot_users (
+        chat_id INTEGER PRIMARY KEY,
+        username TEXT,
+        first_name TEXT,
+        balance REAL DEFAULT 0.0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_active TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+
+    # جدول جلسات وحالات المستخدمين للخطوات التفاعلية (User Sessions)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS user_sessions (
+        chat_id INTEGER PRIMARY KEY,
+        state TEXT,
+        data TEXT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     ''')
@@ -89,9 +118,9 @@ def create_order(data):
     cursor.execute('''
         INSERT INTO orders (
             order_num, service_type, service_title, package_id, package_name,
-            target_id, customer_name, customer_phone, price_usd, price_local,
+            target_id, customer_name, customer_phone, telegram_chat_id, price_usd, price_local,
             currency, payment_method, payment_ref, status, admin_notes
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         order_num,
         data.get('service_type', 'games'),
@@ -101,6 +130,7 @@ def create_order(data):
         data.get('target_id', ''),
         data.get('customer_name', 'زبون المتجر'),
         data.get('customer_phone', ''),
+        data.get('telegram_chat_id'),
         float(data.get('price_usd', 0.0)),
         float(data.get('price_local', 0.0)),
         data.get('currency', 'ل.س'),
@@ -220,6 +250,94 @@ def set_setting(key, value):
     cursor.execute('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)', (key, str(value)))
     conn.commit()
     conn.close()
+
+# ==========================================
+# دوال إدارة مستخدمي التيليجرام والجلسات
+# ==========================================
+def register_or_update_bot_user(chat_id, username=None, first_name=None):
+    """تسجيل أو تحديث نشاط مستخدم البوت"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO bot_users (chat_id, username, first_name, last_active)
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(chat_id) DO UPDATE SET
+            username = COALESCE(?, username),
+            first_name = COALESCE(?, first_name),
+            last_active = CURRENT_TIMESTAMP
+    ''', (chat_id, username, first_name, username, first_name))
+    conn.commit()
+    conn.close()
+
+def get_all_bot_users():
+    """جلب جميع مستخدمي البوت (للإذاعة والإحصائيات)"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM bot_users ORDER BY last_active DESC')
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+def get_bot_user_count():
+    """عدد مشتركي البوت"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) FROM bot_users')
+    count = cursor.fetchone()[0]
+    conn.close()
+    return count
+
+def set_user_session(chat_id, state, data=None):
+    """حفظ حالة المستخدم الحالية وبيانات الخطوة"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    data_json = json.dumps(data or {}, ensure_ascii=False)
+    cursor.execute('''
+        INSERT INTO user_sessions (chat_id, state, data, updated_at)
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(chat_id) DO UPDATE SET
+            state = ?,
+            data = ?,
+            updated_at = CURRENT_TIMESTAMP
+    ''', (chat_id, state, data_json, state, data_json))
+    conn.commit()
+    conn.close()
+
+def get_user_session(chat_id):
+    """جلب جلسة المستخدم وحالته الحالية"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT state, data FROM user_sessions WHERE chat_id = ?', (chat_id,))
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        return None, {}
+    try:
+        data = json.loads(row['data']) if row['data'] else {}
+    except Exception:
+        data = {}
+    return row['state'], data
+
+def clear_user_session(chat_id):
+    """مسح جلسة المستخدم والعودة للقائمة الرئيسية"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM user_sessions WHERE chat_id = ?', (chat_id,))
+    conn.commit()
+    conn.close()
+
+def get_user_orders(chat_id, limit=5):
+    """جلب آخر طلبات زبون التيليجرام"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT * FROM orders 
+        WHERE telegram_chat_id = ? 
+        ORDER BY id DESC LIMIT ?
+    ''', (chat_id, limit))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
 
 # تهيئة قاعدة البيانات عند أول استدعاء
 init_db()
