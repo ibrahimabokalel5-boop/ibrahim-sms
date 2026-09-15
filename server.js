@@ -16,7 +16,7 @@ const TELEGRAM_BOT_TOKEN = (process.env.TELEGRAM_BOT_TOKEN || '8742602166:AAHKet
 const TELEGRAM_ADMIN_CHAT_ID = String(process.env.TELEGRAM_ADMIN_CHAT_ID || '6067874888').trim();
 const HERO_SMS_KEY = (process.env.HERO_SMS_KEY || 'f144cA86391f362758c129f14dc33fc9').trim();
 const PORT = process.env.PORT || 8080;
-const RAILWAY_URL = (process.env.RAILWAY_STATIC_URL || process.env.RENDER_EXTERNAL_URL || '').trim().replace(/\/$/, '');
+const WEBHOOK_URL = (process.env.WEBHOOK_URL || '').trim().replace(/\/$/, '');
 
 const HERO_SMS_URL = 'https://hero-sms.com/stubs/handler_api.php';
 
@@ -537,10 +537,9 @@ app.listen(PORT, async () => {
   const bal = await heroGetBalance();
   console.log(`💰 Hero-SMS Balance: ${bal}`);
 
-  // ضبط Webhook تلقائياً إذا كان على Railway
-  const url = RAILWAY_URL || process.env.RAILWAY_PUBLIC_DOMAIN;
-  if (url) {
-    const hookUrl = url.startsWith('http') ? `${url}/webhook` : `https://${url}/webhook`;
+  if (WEBHOOK_URL) {
+    // وضع Webhook (على Railway أو أي سيرفر)
+    const hookUrl = `${WEBHOOK_URL}/webhook`;
     const r = await tgCall('setWebhook', { url: hookUrl });
     console.log(`🔗 Webhook set to ${hookUrl}:`, r.description || r.ok);
   } else {
