@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero-SMS Bot — لوحة التحكم</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0e1a;
+      --surface:   #111827;
+      --card:      #1a2235;
+      --border:    #1e2d45;
+      --accent:    #3b82f6;
+      --accent2:   #8b5cf6;
+      --green:     #10b981;
+      --yellow:    #f59e0b;
+      --red:       #ef4444;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --glow:      rgba(59,130,246,0.15);
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background grid ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.06));
+      backdrop-filter: blur(20px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 20px rgba(59,130,246,0.4);
+    }
+
+    .logo-text h1 { font-size: 20px; font-weight: 700; }
+    .logo-text p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .status-badge {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 50px;
+      font-size: 13px;
+      color: var(--green);
+    }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── Main layout ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* ── Cards grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--card-color, linear-gradient(90deg, var(--accent), var(--accent2)));
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .stat-card .icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: 900;
+      background: var(--card-gradient, linear-gradient(135deg, var(--accent), var(--accent2)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .stat-card .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── Table ── */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .refresh-btn {
+      background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .refresh-btn:hover {
+      background: rgba(59,130,246,0.25);
+      transform: scale(1.03);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      text-align: right;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+    tbody td {
+      padding: 12px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-green  { background: rgba(16,185,129,0.15);  color: var(--green);  border: 1px solid rgba(16,185,129,0.3); }
+    .badge-yellow { background: rgba(245,158,11,0.15);  color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+    .badge-red    { background: rgba(239,68,68,0.15);   color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+    .badge-blue   { background: rgba(59,130,246,0.15);  color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
+
+    code {
+      background: rgba(255,255,255,0.07);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 48px;
+      color: var(--muted);
+    }
+
+    .empty .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+    /* ── Loading skeleton ── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--card) 25%, var(--border) 50%, var(--card) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+      height: 20px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .last-update {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      header { padding: 16px; flex-wrap: wrap; gap: 12px; }
+      main   { padding: 20px 12px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .stat-card .value { font-size: 24px; }
+      table { font-size: 11px; }
+      tbody td, thead th { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🤖</div>
+    <div class="logo-text">
+      <h1>Hero-SMS Bot</h1>
+      <p>لوحة التحكم والإحصائيات</p>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span class="last-update" id="lastUpdate">جاري التحميل...</span>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span>مشغّل</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card" style="--card-color: linear-gradient(90deg,#3b82f6,#8b5cf6); --card-gradient: linear-gradient(135deg,#3b82f6,#8b5cf6);">
+      <span class="icon">💰</span>
+      <div class="label">الرصيد الحالي</div>
+      <div class="value" id="balance">---</div>
+      <div class="sub">Hero-SMS</div>
+    </div>
+
+    <div class="stat-card" style="--card-color: linear-gradient(90deg,#10b981,#06b6d4); --card-gradient: linear-gradient(135deg,#10b981,#06b6d4);">
+      <span class="icon">🛒</span>
+      <div class="label">إجمالي الشراء</div>
+      <div class="value" id="totalPurchases">---</div>
+      <div class="sub">رقم تفعيل</div>
+    </div>
+
+    <div class="stat-card" style="--card-color: linear-gradient(90deg,#f59e0b,#ef4444); --card-gradient: linear-gradient(135deg,#f59e0b,#ef4444);">
+      <span class="icon">💸</span>
+      <div class="label">إجمالي المنفق</div>
+      <div class="value" id="totalSpent">---</div>
+      <div class="sub">دولار أمريكي</div>
+    </div>
+
+    <div class="stat-card" style="--card-color: linear-gradient(90deg,#8b5cf6,#ec4899); --card-gradient: linear-gradient(135deg,#8b5cf6,#ec4899);">
+      <span class="icon">⚡</span>
+      <div class="label">أرقام نشطة</div>
+      <div class="value" id="activeNumbers">---</div>
+      <div class="sub">حالياً</div>
+    </div>
+
+    <div class="stat-card" style="--card-color: linear-gradient(90deg,#06b6d4,#3b82f6); --card-gradient: linear-gradient(135deg,#06b6d4,#3b82f6);">
+      <span class="icon">👥</span>
+      <div class="label">المستخدمون</div>
+      <div class="value" id="usersCount">---</div>
+      <div class="sub">مسجّل</div>
+    </div>
+  </div>
+
+  <!-- Recent Purchases Table -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📋 آخر العمليات</div>
+      <button class="refresh-btn" onclick="loadStats()">🔄 تحديث</button>
+    </div>
+
+    <div id="tableContainer">
+      <div class="empty">
+        <div class="empty-icon">⏳</div>
+        <div>جاري التحميل...</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Hero-SMS Bot Dashboard &nbsp;·&nbsp; يتحدث تلقائياً كل 10 ثوانٍ
+</footer>
+
+<script>
+  const SERVICES = {
+    wa:'💬 واتساب', tg:'✈️ تيليجرام', lf:'🎵 تيك توك',
+    go:'🔍 جوجل',   fb:'📘 فيسبوك',   ig:'📷 إنستغرام',
+    fu:'👻 سناب',   tw:'🐦 تويتر',    ds:'👾 ديسكورد',
+    vi:'📞 فايبر',  nf:'🍿 نتفليكس',  ot:'🌐 أخرى'
+  };
+
+  const STATUS_MAP = {
+    done:      { label: '✅ نجح',     cls: 'badge-green' },
+    waiting:   { label: '⏳ ينتظر',   cls: 'badge-yellow' },
+    timeout:   { label: '⏰ انتهى',   cls: 'badge-red' },
+    cancelled: { label: '❌ ملغى',    cls: 'badge-red' }
+  };
+
+  async function loadStats() {
+    try {
+      const data = await fetch('/api/stats').then(r => r.json());
+
+      // Cards
+      document.getElementById('balance').textContent        = data.balance.toFixed(2) + ' $';
+      document.getElementById('totalPurchases').textContent = data.totalPurchases;
+      document.getElementById('totalSpent').textContent     = data.totalSpent.toFixed(2) + ' $';
+      document.getElementById('activeNumbers').textContent  = data.activeNumbers;
+      document.getElementById('usersCount').textContent     = data.users;
+
+      // Last update
+      document.getElementById('lastUpdate').textContent =
+        'آخر تحديث: ' + new Date().toLocaleTimeString('ar-EG');
+
+      // Table
+      renderTable(data.recentPurchases);
+    } catch (e) {
+      document.getElementById('tableContainer').innerHTML =
+        '<div class="empty"><div class="empty-icon">❌</div><div>تعذر الاتصال بالسيرفر</div></div>';
+    }
+  }
+
+  function renderTable(purchases) {
+    const container = document.getElementById('tableContainer');
+
+    if (!purchases || !purchases.length) {
+      container.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div>لا توجد عمليات بعد</div></div>';
+      return;
+    }
+
+    const rows = purchases.map(p => {
+      const st    = STATUS_MAP[p.status] || { label: p.status, cls: 'badge-blue' };
+      const date  = new Date(p.time).toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' });
+      const svc   = SERVICES[p.service] || p.service;
+      const code  = p.code ? `<code>${p.code}</code>` : '<span style="color:var(--muted)">—</span>';
+      return `
+        <tr>
+          <td>${svc}</td>
+          <td>${p.countryName}</td>
+          <td><code>+${p.number}</code></td>
+          <td>${code}</td>
+          <td><span class="badge ${st.cls}">${st.label}</span></td>
+          <td>${p.cost.toFixed(2)} $</td>
+          <td style="color:var(--muted)">${date}</td>
+        </tr>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>التطبيق</th>
+            <th>الدولة</th>
+            <th>الرقم</th>
+            <th>الكود</th>
+            <th>الحالة</th>
+            <th>التكلفة</th>
+            <th>الوقت</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  // تحميل أولي وتحديث كل 10 ثوانٍ
+  loadStats();
+  setInterval(loadStats, 10000);
+</script>
+
+</body>
+</html>
